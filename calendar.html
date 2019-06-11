@@ -1,0 +1,18 @@
+<html>
+
+<head>
+    <script src="RTcalendar.js" charset="utf-8"></script>
+    <script>
+        window.onload = function () {
+            generateView("#app", function (selectDay) {
+                console.log("select,:"+selectDay)
+            })
+        }
+    </script>
+</head>
+
+<body>
+    <div id="app"></div>
+</body>
+
+</html>
