@@ -1,0 +1,1 @@
+import generateView from './RTcalendar'
