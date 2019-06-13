@@ -123,11 +123,11 @@ Calendar.prototype.setYear = function (year) {
 }
 
 
-function mouseOver(element) {
+window.mouseOver=function (element) {
     element.style.color = "#FFFFFF"
 }
 
-function mouseOut(element) {
+window.mouseOut=function (element) {
     var label = element.getAttribute('lable')
     if (label == 'sat' || label == 'sun') {
         element.style.color = "#FF0000"
@@ -137,8 +137,8 @@ function mouseOut(element) {
 
 }
 let mCalendar = new Calendar()
-
-function clickDay(element) {
+window.mCalendar=mCalendar
+window.clickDay=function (element) {
     if (element.innerText != '') {
         var day = new Date(mCalendar.year, mCalendar.month, element.innerText)
         mCalendar.selectDay = day
