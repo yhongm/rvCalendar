@@ -9,7 +9,7 @@ npm install rvcalendar
 
 
 
-    import generateView from 'RVcalendar'
+    import generateView from 'rvcalendar'
     window.onload = function () {
     generateView("#app", function (selectDay) {
         console.log("select,:"+selectDay)
