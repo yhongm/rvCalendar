@@ -16,4 +16,5 @@ npm install rvcalendar
     })
 }
 ```
-
+# 预览
+<img src="preview.png">
