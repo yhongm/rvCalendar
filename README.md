@@ -16,5 +16,6 @@ npm install rvcalendar
     })
 }
 ```
+[DEMO](https://github.com/yhongm/rvCalendarDemo)
 # 预览
 <img src="preview.png">
