@@ -1,4 +1,5 @@
-# 一个简单的响应式日历组件，虚拟dom写成
+# 一个简单的响应式日历组件，rv.js写成
+[rv.js](https://github.com/yhongm.rv.js)
 # 使用方法
 
 
