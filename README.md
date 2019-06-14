@@ -1,7 +1,7 @@
 # 一个简单的响应式日历组件，[rv.js](https://github.com/yhongm/rv.js)实现
 
 # 使用方法
-npm install rvCalendar
+npm install rvcalendar
 ```javascript
 
 
