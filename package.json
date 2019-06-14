@@ -1,12 +1,12 @@
 {
   "name": "rvcalendar",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "a calendar",
-  "main": "RTcalendar.js",
+  "main": "dist/bundle.js",
   "dependencies": {
     "@babel/core": "^7.4.5",
     "@babel/preset-env": "^7.4.5",
-    "yhongm_rv.js": "^1.0.3"
+    "yhongm_rv.js": "^1.0.9"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -20,7 +20,8 @@
     "webpack-cli": "^3.3.4"
   },
   "scripts": {
-    "build": "babel RTcalendar.js -d lib"
+    "build babel": "babel RTcalendar.js -d lib",
+    "build": "npx webpack"
   },
   "repository": {
     "type": "git",
