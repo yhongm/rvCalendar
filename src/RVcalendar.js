@@ -1,4 +1,5 @@
 import RV from 'yhongm_rv.js'
+import lunarCalendar from './lunar'
 /**
  *  
  */
@@ -69,7 +70,25 @@ Calendar.prototype.getWeeks = function () {
             _cellObj.id = id
             _cellObj.lable = lable
             _cellObj.style = style
+            let lunar=lunarCalendar.getLunar(this.year,this.month,this.day)
+            _cellObj.content = content
+            _cellObj.id = id
+            _cellObj.lable = lable
+            _cellObj.style = style
+            let lunarInfo=""
+            if(lunar.calendaricity!=""){
+                lunarInfo=lunar.calendaricity
 
+            }else if(lunar.solarHoliday){
+                lunarInfo=lunar.solarHoliday
+
+            }else if(lunar.lunarHoliday){
+                lunarInfo=lunar.lunarHoliday
+            }else{
+                lunarInfo=lunar.chinaMonth+lunar.chinaDay
+
+            }
+            _cellObj.lunarInfo=lunarInfo
             dayInWeeks.push(_cellObj)
         }
         weeks.push(dayInWeeks)

@@ -2,12 +2,19 @@ const path = require('path');
 const {
   CleanWebpackPlugin
 } = require('clean-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
-  entry: './src/RVcalendar.js',
+  // entry: './src/RVcalendar.js',
+  entry:'./calendarDemo.js',
   mode: "production",
   // devtool: 'inline-source-map',
   plugins: [
     new CleanWebpackPlugin(),
+    new HtmlWebpackPlugin({
+      title: '',
+      template:'calendarDemo.html',
+      filename:'demo.html'
+    })
   ],
   output: {
     path: path.resolve(__dirname, 'dist'),
