@@ -6,8 +6,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
   // entry: './src/RVcalendar.js',
   entry:'./calendarDemo.js',
-  mode: "production",
-  // devtool: 'inline-source-map',
+  // mode: "production",
+  devtool: 'inline-source-map',
   plugins: [
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({

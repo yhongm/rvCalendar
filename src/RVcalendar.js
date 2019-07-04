@@ -1,5 +1,6 @@
-import RV from 'yhongm_rv.js'
+import RV from './rv'
 import lunarCalendar from './lunar'
+
 /**
  *  
  */
@@ -337,16 +338,17 @@ export default function generateView(el, callback) {
                             lable: '%#v.lable#%',
                             onMouseover: 'mouseOver(this);',
                             onMouseOut: 'mouseOut(this);',
+                            childDomData:"v",
                             for: 'v _in'
                         },
                         // children: ["%#v.content#%"]
                         children: [
                             {
                                 tag: "p",
-                                props: 
+                                props:
                                 {
-                                    key:"{var tempId=v.id;result=tempId*2+1;}"
-                                }, 
+                                    key: "{new Date()/100}"
+                                },
                                 children: ["%#v.content#%"]
 
                             },
@@ -354,9 +356,9 @@ export default function generateView(el, callback) {
                                 tag: "p",
                                 props:
                                 {
-                                    key:"%#(v.id*2-1)#%"
+                                    key: "{new Date()/100}"
                                 },
-                                 children: ["%#v.lunarInfo#%"]
+                                children: ["%#v.lunarInfo#%"]
 
                             }
                         ]
