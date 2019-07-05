@@ -339,6 +339,7 @@ export default function generateView(el, callback) {
                             onMouseover: 'mouseOver(this);',
                             onMouseOut: 'mouseOut(this);',
                             childDomData:"v",
+                            
                             for: 'v _in'
                         },
                         // children: ["%#v.content#%"]
@@ -347,7 +348,7 @@ export default function generateView(el, callback) {
                                 tag: "p",
                                 props:
                                 {
-                                    key: "{new Date()/100}"
+                                   key: "{new Date()/100}"
                                 },
                                 children: ["%#v.content#%"]
 
@@ -356,7 +357,7 @@ export default function generateView(el, callback) {
                                 tag: "p",
                                 props:
                                 {
-                                    key: "{new Date()/100}"
+                                   key: "{new Date()/100}"
                                 },
                                 children: ["%#v.lunarInfo#%"]
 

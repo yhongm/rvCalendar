@@ -564,14 +564,14 @@ class RV {
                         }
                         dataArray = dom.forData
                         dataSingle = dom.props['for'].split(" _in")[0]
-                        console.log("for in forfor dataSingle:" + dataSingle)
+                        
                     } else {
                         if (Util.isForForIn(dom.props['for'])) {
                             throw new Error("plase use _in_ direction")
                         }
                         dataArray = this.data[dom.props['for'].split(" _in_ ")[1]]
                         dataSingle = dom.props['for'].split(" _in_ ")[0]
-                        console.log("for  dataSingle:" + dataSingle)
+                       
                     }
                 }
             } else if (dom.props['for_for']) { //add for_for direction
@@ -582,7 +582,7 @@ class RV {
                     isForFor = true
                     dataArray = this.data[dom.props['for_for'].split(" _in_ ")[1]]
                     dataSingle = dom.props['for_for'].split(" _in_ ")[0]
-                    console.log("for_for  dataSingle:" + dataSingle)
+                   
                 } else { }
             } else {
                 throw new Error("the for direction use error")
@@ -631,7 +631,7 @@ class RV {
                         }
                     } else if (value === "childDomData") {
                         let childDomDataKey=dom.props[value]
-                        Object.defineProperty(obj,childDomDataKey,{value:this.data})
+                        Object.defineProperty(obj,"childDomData",{value:this.data})
                     }
 
                     else {
@@ -696,7 +696,7 @@ class RV {
                     }
                 } else if (value === "childDomData") {
                     let childDomDataKey=dom.props[value]
-                    Object.defineProperty(obj,childDomDataKey,{value:this.data})
+                    Object.defineProperty(obj,"childDomData",{value:this.data})
                 }
                 else {
 
