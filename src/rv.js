@@ -613,7 +613,9 @@ class RV {
                         // dom.children.forEach(childDom => {
                         //     Object.defineProperty(childDom, "childDomData", { value: data })
                         // })
-                        Object.defineProperty(dom, "domData", { value: data })
+
+                        Object.defineProperty(obj, "domData", { value: data })
+                        console.log("childDomData:obj:"+("domData" in obj))
                     }
 
                     else {
@@ -634,17 +636,21 @@ class RV {
                     }
 
                 }
+                
 
                 for (let child in dom.children) {
+                    if ("domData" in obj) {
+                        console.log("111111111111111111,,,childDomData,value:" + obj.domData)
+                        // obj.children[child] = dom.childDomData[RV.getPlaceHolderValue(dom.children[child])]
+                    }
                     if (Util.isString(dom.children[child])) {
+                        
+                        
                         if (RV.isPlaceHolder(dom.children[child])) {
                             if (RV.getPlaceHolderValue(dom.children[child]).indexOf(dataSingle) == -1) {
                                 obj.children[child] = this.data[RV.getPlaceHolderValue(dom.children[child])]
                                 // console.log("dom.keys:" + JSON.stringify(Object.keys(dom)))
-                                if ("domData" in dom) {
-                                    console.log("childDomData,value:" + dom.domData)
-                                    // obj.children[child] = dom.childDomData[RV.getPlaceHolderValue(dom.children[child])]
-                                }
+                                
                             } else {
                                 obj.children[child] = data[RV.getPlaceHolderValue(dom.children[child]).split(".")[1]]
                             }
@@ -679,6 +685,13 @@ class RV {
             )
             return objs
         } else {
+            console.log("else,domData:"+("data" in dom))
+            let data
+            if("data" in dom){
+                data=dom.data
+            }else{
+                data=this.data
+            }
             let obj = {}
             obj.tag = dom.tag
             obj.children = []
@@ -690,16 +703,16 @@ class RV {
                     let style = dom.props[value]
                     if (style.indexOf(",") > -1) {
                         let styles = style.split(",")
-                        obj.props[value] = this.handleArrayStyle(this.data, styles, undefined)
+                        obj.props[value] = this.handleArrayStyle(data, styles, undefined)
                     } else {
 
-                        obj.props[value] = this.handleSingleStyle(this.data, style, undefined)
+                        obj.props[value] = this.handleSingleStyle(data, style, undefined)
                     }
                 } else if (value === "childDomData") {
                     // dom.children.forEach(childDom => {
                     //     Object.defineProperty(childDom, "childDomData", { value: this.data })
                     // })
-                    Object.defineProperty(dom, "domData", { value: this.data })
+                    // Object.defineProperty(dom, "domData", { value: this.data })
 
 
                 }
@@ -723,7 +736,15 @@ class RV {
             for (let child in dom.children) {
                 if (Util.isString(dom.children[child])) {
                     if (RV.isPlaceHolder(dom.children[child])) {
-                        obj.children[child] = this.data[RV.getPlaceHolderValue(dom.children[child])]
+                        let value=RV.getPlaceHolderValue(dom.children[child])
+                         console.log("else,value:"+value+",data:"+JSON.stringify(data))
+                        if(value.indexOf(".")>0){
+                            obj.children[child] = data[value.split('.')[1]]
+                            console.log("else,value:"+value+",data:"+JSON.stringify(data)+",...:"+obj.children[child])
+                        }else{
+                            obj.children[child] = data[value]
+                        }
+                       
                     }
                     console.log("dom.keys:" + JSON.stringify(Object.keys(dom)))
                     if ("domData" in dom) {
@@ -732,7 +753,7 @@ class RV {
                         // value=dom.childDomData[dataSingle]
                         // console.log("childDomData,value:"+value)
                         console.log("childDomData,keys:,value:" + dom.domData)
-                        obj.children[child] = dom.childDomData[RV.getPlaceHolderValue(dom.children[child])]
+                        // obj.children[child] = dom.childDomData[RV.getPlaceHolderValue(dom.children[child])]
                     }
                     else {
 
@@ -745,7 +766,7 @@ class RV {
                 }
             }
 
-            console.log("childDomData,obj,childDomData:" + ("childDomData" in obj))
+            console.log("childDomData,obj,js:" +(JSON.stringify(obj)) )
             return obj
         }
     }

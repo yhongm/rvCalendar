@@ -7,6 +7,7 @@ module.exports = {
   // entry: './src/RVcalendar.js',
   entry:'./calendarDemo.js',
   // mode: "production",
+  mode:'development',
   devtool: 'inline-source-map',
   plugins: [
     new CleanWebpackPlugin(),
