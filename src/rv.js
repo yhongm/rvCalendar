@@ -746,26 +746,26 @@ class RV {
                         }
                        
                     }
-                    console.log("dom.keys:" + JSON.stringify(Object.keys(dom)))
-                    if ("domData" in dom) {
-                        // let dataSingle=Object.keys(dom.childDomData)[0]
-                        // console.log("childDomData dataSingle:"+dataSingle)
-                        // value=dom.childDomData[dataSingle]
-                        // console.log("childDomData,value:"+value)
-                        console.log("childDomData,keys:,value:" + dom.domData)
-                        // obj.children[child] = dom.childDomData[RV.getPlaceHolderValue(dom.children[child])]
-                    }
-                    else {
+                    console.log("obj.children:" + JSON.stringify(obj.children))
+                    // if ("domData" in dom) {
+                    //     // let dataSingle=Object.keys(dom.childDomData)[0]
+                    //     // console.log("childDomData dataSingle:"+dataSingle)
+                    //     // value=dom.childDomData[dataSingle]
+                    //     // console.log("childDomData,value:"+value)
+                    //     console.log("childDomData,keys:,value:" + dom.domData)
+                    //     // obj.children[child] = dom.childDomData[RV.getPlaceHolderValue(dom.children[child])]
+                    // }
+                    // else {
 
-                        obj.children[child] = dom.children[child]
-                    }
+                    //     obj.children[child] = dom.children[child]
+                    // }
                 } else {
 
                     obj.children[child] = this.applyTruthfulData(dom.children[child])
 
                 }
             }
-
+            console.log("obj.children,2:" + JSON.stringify(obj.children))
             console.log("childDomData,obj,js:" +(JSON.stringify(obj)) )
             return obj
         }
