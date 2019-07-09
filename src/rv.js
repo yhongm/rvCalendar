@@ -1,3 +1,5 @@
+
+
 const NODE_REPLACE = 0 //node replace 
 const CHILD_RE_ORDER = 1 //child node re order
 const NODE_PROPS = 2 //prop change 
@@ -552,6 +554,7 @@ class RV {
         return h(dom.tag, dom.props, children)
     }
     applyTruthfulData(dom) {
+        console.log("applyTruthfulData,dom.keys:" + Object.keys(dom) + ",childDomData:" + ("childDomData" in dom))
         if ("for" in dom.props || "for_for" in dom.props) {
             let dataArray = []
             let isForFor = false
@@ -564,14 +567,14 @@ class RV {
                         }
                         dataArray = dom.forData
                         dataSingle = dom.props['for'].split(" _in")[0]
-                        
+                        console.log("for in forfor dataSingle:" + dataSingle)
                     } else {
                         if (Util.isForForIn(dom.props['for'])) {
                             throw new Error("plase use _in_ direction")
                         }
                         dataArray = this.data[dom.props['for'].split(" _in_ ")[1]]
                         dataSingle = dom.props['for'].split(" _in_ ")[0]
-                       
+                        console.log("for  dataSingle:" + dataSingle)
                     }
                 }
             } else if (dom.props['for_for']) { //add for_for direction
@@ -582,7 +585,7 @@ class RV {
                     isForFor = true
                     dataArray = this.data[dom.props['for_for'].split(" _in_ ")[1]]
                     dataSingle = dom.props['for_for'].split(" _in_ ")[0]
-                   
+                    console.log("for_for  dataSingle:" + dataSingle)
                 } else { }
             } else {
                 throw new Error("the for direction use error")
@@ -593,30 +596,6 @@ class RV {
                 obj.tag = dom.tag
                 obj.children = []
                 obj.props = {}
-                for (let child in dom.children) {
-                    if (Util.isString(dom.children[child])) {
-                        if (RV.isPlaceHolder(dom.children[child])) {
-                            if (RV.getPlaceHolderValue(dom.children[child]).indexOf(dataSingle) == -1) {
-                                obj.children[child] = this.data[RV.getPlaceHolderValue(dom.children[child])]
-                            } else {
-                                obj.children[child] = data[RV.getPlaceHolderValue(dom.children[child]).split(".")[1]]
-                            }
-                        } else {
-                            obj.children[child] = dom.children[child]
-                        }
-                    } else {
-                        if (isForFor) {
-                            dom.children[child].forData = data
-                        } else {
-                            if (dom.children[child] instanceof Object) {
-                                dom.children[child].data = data
-                            }
-
-                        }
-                        obj.children[child] = this.applyTruthfulData(dom.children[child])
-                    }
-                }
-
                 let props = Object.keys(dom.props)
                 for (let prop in props) {
                     let value = props[prop]
@@ -630,8 +609,11 @@ class RV {
                             obj.props[value] = this.handleSingleStyle(data, style, dataSingle)
                         }
                     } else if (value === "childDomData") {
-                        let childDomDataKey=dom.props[value]
-                        Object.defineProperty(obj,"childDomData",{value:this.data})
+
+                        // dom.children.forEach(childDom => {
+                        //     Object.defineProperty(childDom, "childDomData", { value: data })
+                        // })
+                        Object.defineProperty(dom, "domData", { value: data })
                     }
 
                     else {
@@ -652,6 +634,45 @@ class RV {
                     }
 
                 }
+
+                for (let child in dom.children) {
+                    if (Util.isString(dom.children[child])) {
+                        if (RV.isPlaceHolder(dom.children[child])) {
+                            if (RV.getPlaceHolderValue(dom.children[child]).indexOf(dataSingle) == -1) {
+                                obj.children[child] = this.data[RV.getPlaceHolderValue(dom.children[child])]
+                                // console.log("dom.keys:" + JSON.stringify(Object.keys(dom)))
+                                if ("domData" in dom) {
+                                    console.log("childDomData,value:" + dom.domData)
+                                    // obj.children[child] = dom.childDomData[RV.getPlaceHolderValue(dom.children[child])]
+                                }
+                            } else {
+                                obj.children[child] = data[RV.getPlaceHolderValue(dom.children[child]).split(".")[1]]
+                            }
+
+                        }
+
+                        else {
+                            obj.children[child] = dom.children[child]
+                        }
+
+
+                    } else {
+                        if (isForFor) {
+                            dom.children[child].forData = data
+                        }
+
+
+                        else {
+                            if (dom.children[child] instanceof Object) {
+                                dom.children[child].data = data
+                            }
+
+                        }
+                        obj.children[child] = this.applyTruthfulData(dom.children[child])
+                    }
+                }
+
+
                 objs.push(obj)
             }
 
@@ -662,26 +683,6 @@ class RV {
             obj.tag = dom.tag
             obj.children = []
             obj.props = {}
-            for (let child in dom.children) {
-                if (Util.isString(dom.children[child])) {
-                    if (RV.isPlaceHolder(dom.children[child])) {
-                        obj.children[child] = this.data[RV.getPlaceHolderValue(dom.children[child])]
-                    } else if ("childDomData" in Object.keys(obj)) {
-                        let dataSingle=Object.keys(obj.childDomData)[0]
-                        value=obj.childDomData[dataSingle]
-                        console.log("childDomData,value:"+value)
-                        obj.children[child]=obj.props.childDomData[RV.getPlaceHolderValue(dom.children[child])]
-                    }
-                    else {
-
-                        obj.children[child] = dom.children[child]
-                    }
-                } else {
-                    obj.children[child] = this.applyTruthfulData(dom.children[child])
-
-                }
-            }
-
             let props = Object.keys(dom.props)
             for (let prop in props) {
                 let value = props[prop]
@@ -695,8 +696,12 @@ class RV {
                         obj.props[value] = this.handleSingleStyle(this.data, style, undefined)
                     }
                 } else if (value === "childDomData") {
-                    let childDomDataKey=dom.props[value]
-                    Object.defineProperty(obj,"childDomData",{value:this.data})
+                    // dom.children.forEach(childDom => {
+                    //     Object.defineProperty(childDom, "childDomData", { value: this.data })
+                    // })
+                    Object.defineProperty(dom, "domData", { value: this.data })
+
+
                 }
                 else {
 
@@ -715,6 +720,32 @@ class RV {
 
             }
 
+            for (let child in dom.children) {
+                if (Util.isString(dom.children[child])) {
+                    if (RV.isPlaceHolder(dom.children[child])) {
+                        obj.children[child] = this.data[RV.getPlaceHolderValue(dom.children[child])]
+                    }
+                    console.log("dom.keys:" + JSON.stringify(Object.keys(dom)))
+                    if ("domData" in dom) {
+                        // let dataSingle=Object.keys(dom.childDomData)[0]
+                        // console.log("childDomData dataSingle:"+dataSingle)
+                        // value=dom.childDomData[dataSingle]
+                        // console.log("childDomData,value:"+value)
+                        console.log("childDomData,keys:,value:" + dom.domData)
+                        obj.children[child] = dom.childDomData[RV.getPlaceHolderValue(dom.children[child])]
+                    }
+                    else {
+
+                        obj.children[child] = dom.children[child]
+                    }
+                } else {
+
+                    obj.children[child] = this.applyTruthfulData(dom.children[child])
+
+                }
+            }
+
+            console.log("childDomData,obj,childDomData:" + ("childDomData" in obj))
             return obj
         }
     }
@@ -812,4 +843,5 @@ class RV {
     }
 
 }
+
 export default RV
