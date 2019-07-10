@@ -71,7 +71,7 @@ Calendar.prototype.getWeeks = function () {
             _cellObj.id = id
             _cellObj.lable = lable
             _cellObj.style = style
-            let lunar = lunarCalendar.getLunar(this.year, this.month, this.day)
+            let lunar = lunarCalendar.getLunar(this.year, this.month+1, content)
             _cellObj.content = content
             _cellObj.id = id
             _cellObj.lable = lable
@@ -86,10 +86,20 @@ Calendar.prototype.getWeeks = function () {
             } else if (lunar.lunarHoliday) {
                 lunarInfo = lunar.lunarHoliday
             } else {
-                lunarInfo = lunar.chinaMonth + lunar.chinaDay
+                if(lunar.chinaDay==="初一"){
+                    lunarInfo = lunar.chinaMonth 
+                }else{
+                    lunarInfo= lunar.chinaDay
+                }
+                
 
             }
-            _cellObj.lunarInfo = lunarInfo
+            if(content != ""){
+                _cellObj.lunarInfo = lunarInfo
+            }else{
+                _cellObj.lunarInfo = ""
+            }
+           
             dayInWeeks.push(_cellObj)
         }
         weeks.push(dayInWeeks)
