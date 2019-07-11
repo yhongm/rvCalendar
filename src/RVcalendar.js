@@ -45,7 +45,7 @@ Calendar.prototype.getWeeks = function () {
             }
 
             if (this.day == this.daily) {
-                style = "font-weight:bold;color:#000000;background-color:#FFFFFF;height:20px;text-align:center"
+                style = "font-weight:bold;color:#FFFFFF;background-color:#5CBA5A;height:20px;text-align:center"
                 lable = "current"
             } else if (j == 6) {
                 style = "color:#FF0000;text-decoration:none;background-color:#E5E9F2;text-align:center;height:18px;width:12%"
@@ -170,7 +170,8 @@ let mCalendar = new Calendar()
 window.mCalendar = mCalendar
 window.clickDay = function (element) {
     if (element.innerText != '') {
-        var day = new Date(mCalendar.year, mCalendar.month, element.innerText)
+        var day = new Date(mCalendar.year, mCalendar.month, element.children[0].innerText
+            )
         mCalendar.selectDay = day
     }
 }
@@ -358,7 +359,8 @@ export default function generateView(el, callback) {
                                 tag: "p",
                                 props:
                                 {
-                                   key: "{%#v.id#%+'content'}"
+                                   key: "{%#v.id#%+'_content'}",
+                                   style:"margin-block-start: 0em;margin-block-end: 0em"
                                 },
                                 children: ["%#v.content#%"]
 
@@ -367,7 +369,8 @@ export default function generateView(el, callback) {
                                 tag: "p",
                                 props:
                                 {
-                                   key: "{%#v.id#%+'lunarInfo'}"
+                                   key: "{%#v.id#%+'_lunarInfo'}",
+                                   style:"margin-block-start: 0em;margin-block-end: 0em"
                                 },
                                 children: ["%#v.lunarInfo#%"]
 
