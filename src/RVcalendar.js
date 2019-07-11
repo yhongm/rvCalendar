@@ -245,7 +245,7 @@ export default function generateView(el, callback) {
                                 tag: 'button',
                                 props: {
                                     onclick: "mCalendar.subMonth()",
-                                    style: 'font-weight:bold; color:#243F65;cursor:hand;text-decoration:none;',
+                                    style: 'font-weight:bold; color:#243F65;cursor:hand;text-decoration:none;margin-right:20px',
                                     key: "subButton"
                                 },
                                 children: ["<"]
@@ -255,7 +255,7 @@ export default function generateView(el, callback) {
                                     name: "year",
                                     type: "text",
                                     maxlength: "4",
-                                    style: 'font-size: 9pt; text-decoration: none;background-color: #FFFFFF;height: 20px;border: 1px solid #666666; color: #000000;',
+                                    style: 'font-size: 9pt; text-decoration: none;background-color: #FFFFFF;height: 20px;border: 1px solid #666666; color: #000000;text-align:center;',
                                     size: "4",
                                     value: '%#year#%',
                                     key: "inputYear"
@@ -268,7 +268,7 @@ export default function generateView(el, callback) {
                                     type: "text",
                                     maxlength: "2",
                                     value: '%#month#%',
-                                    style: 'font-size: 9pt; text-decoration: none;background-color: #FFFFFF;height: 20px;border: 1px solid #666666; color: #000000;',
+                                    style: 'font-size: 9pt; text-decoration: none;background-color: #FFFFFF;height: 20px;border: 1px solid #666666; color: #000000;text-align:center;',
                                     size: "2",
                                     key: "inputMonth"
                                 },
@@ -277,7 +277,7 @@ export default function generateView(el, callback) {
                                 tag: 'button',
                                 props: {
                                     onclick: "mCalendar.addMonth()",
-                                    style: 'font-weight: bold;color: #243F65;cursor: hand;text-decoration: none;',
+                                    style: 'font-weight: bold;color: #243F65;cursor: hand;text-decoration: none;margin-left:20px',
                                     key: "addButton"
                                 },
                                 children: [">"]
@@ -352,13 +352,13 @@ export default function generateView(el, callback) {
                             
                             for: 'v _in'
                         },
-                        // children: ["%#v.content#%"]
+                        
                         children: [
                             {
                                 tag: "p",
                                 props:
                                 {
-                                   key: "{new Date()/100}"
+                                   key: "{%#v.id#%+'content'}"
                                 },
                                 children: ["%#v.content#%"]
 
@@ -367,7 +367,7 @@ export default function generateView(el, callback) {
                                 tag: "p",
                                 props:
                                 {
-                                   key: "{new Date()/100}"
+                                   key: "{%#v.id#%+'lunarInfo'}"
                                 },
                                 children: ["%#v.lunarInfo#%"]
 

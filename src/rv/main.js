@@ -140,7 +140,7 @@ class RV {
 
                             }
                         } else if (RV.isOperatorExpression(dom.props[value])) {
-                            console.log("operaterExpress:" + RV.getOperatorExpression(dom.props[value]))
+                           
                             obj.props[value] = RV.getOperatorExpression(dom.props[value])
                         }
                         else {
@@ -163,12 +163,7 @@ class RV {
                 if (Util.isString(dom.children[child])) {
                     if (RV.isPlaceHolder(dom.children[child])) {
                         obj.children[child] = this.data[RV.getPlaceHolderValue(dom.children[child])]
-                    } else if ("childDomData" in Object.keys(obj)) {
-                        let dataSingle=Object.keys(obj.childDomData)[0]
-                        value=obj.childDomData[dataSingle]
-                        console.log("childDomData,value:"+value)
-                        obj.children[child]=obj.props.childDomData[RV.getPlaceHolderValue(dom.children[child])]
-                    }
+                    } 
                     else {
 
                         obj.children[child] = dom.children[child]
@@ -201,7 +196,6 @@ class RV {
                         obj.props[value] = this.data[RV.getPlaceHolderValue(dom.props[value])]
                     }
                     else if (RV.isOperatorExpression(dom.props[value])) {
-                        console.log("operaterExpress:" + RV.getOperatorExpression(dom.props[value]))
                         obj.props[value] = RV.getOperatorExpression(dom.props[value])
                     }
                     else {
@@ -277,13 +271,13 @@ class RV {
      * @param {String} content 
      */
     static isOperatorExpression(content) {
-        console.log("isOperatorExpression:" + typeof content + ",content:" + content)
+      
         if (Util.isString(content)) {
             if (content.indexOf("{") != -1 && content.indexOf("}") != -1) {
-                console.log("isOperator true")
+               
                 return true
             } else {
-                console.log("isOperator false")
+              
                 return false
             }
         }
@@ -291,17 +285,17 @@ class RV {
     }
     static getOperatorExpression(content, data) {
         if (Util.isString(content)) {
-            console.log(`getOperatorExpression,content:${content}`)
+           
             var expression = content.slice(content.indexOf("{") + 1, content.indexOf("}"))
             let startIndex = expression.indexOf("%#")
             let endIndex = expression.indexOf("#%")
-            console.log("content:" + content + ",expression:" + expression)
+         
             if (startIndex != -1 && endIndex != -1 && startIndex < endIndex) {
                 let placeHolder = expression.slice(startIndex, endIndex)
                 let realValue = data[placeHolder]//通过placeHolder取真实的值
                 expression.replace(placeHolder, realValue)
             }
-            console.log("eval expression,eval:" + eval(expression))
+          
             return eval(expression)
         }
 
