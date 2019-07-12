@@ -256,38 +256,38 @@ class Util {
     static isIgnoreChildren(node) {
         return node.props && node.props.hasOwnProperty("ignore")
     }
-    static isNumber (value) {
-      if (value === undefined || value === null || value === '') {
-        return false
-      }
+    static isNumber(value) {
+        if (value === undefined || value === null || value === '') {
+            return false
+        }
 
-      if (typeof(value) === 'string') {
-        //正整数
-        var reNumber = /^\d+$/
-        //负整数
-        var reNeNumber = /^-\d+$/
-        //正实数
-        var reRealNumber1 = /^[1-9]\d*[.]\d+$/  //非零开头
-        var reRealNumber2 = /^0[.]\d+$/ //零开头
-        //负实数
-        var reNeRealNumber1 = /^-[1-9]\d*[.]\d+$/  //非零开头
-        var reNeRealNumber2 = /^-0[.]\d+$/ //零开头
+        if (typeof (value) === 'string') {
+            //正整数
+            var reNumber = /^\d+$/
+            //负整数
+            var reNeNumber = /^-\d+$/
+            //正实数
+            var reRealNumber1 = /^[1-9]\d*[.]\d+$/  //非零开头
+            var reRealNumber2 = /^0[.]\d+$/ //零开头
+            //负实数
+            var reNeRealNumber1 = /^-[1-9]\d*[.]\d+$/  //非零开头
+            var reNeRealNumber2 = /^-0[.]\d+$/ //零开头
 
-        if (reNumber.test(value) || reNeNumber.test(value) 
-        || reRealNumber1.test(value) || reRealNumber2.test(value)
-        || reNeRealNumber1.test(value)|| reNeRealNumber2.test(value)) {
-          return true
+            if (reNumber.test(value) || reNeNumber.test(value)
+                || reRealNumber1.test(value) || reRealNumber2.test(value)
+                || reNeRealNumber1.test(value) || reNeRealNumber2.test(value)) {
+                return true
+            }
+            else {
+                return false
+            }
+        }
+        else if (typeof (value) === 'number') {
+            return true
         }
         else {
-          return false
+            return false
         }
-      }
-      else if (typeof(value) === 'number') {
-        return true
-      }
-      else {
-        return false
-      }
     }
 
 
@@ -589,40 +589,29 @@ class RV {
         return h(dom.tag, dom.props, children)
     }
     applyTruthfulData(dom) {
-        console.log("applyTruthfulData,dom.keys:" + Object.keys(dom) + ",childDomData:" + ("childDomData" in dom))
-        if ("for" in dom.props || "for_for" in dom.props) {
+        if ("for" in dom.props) {
             let dataArray = []
             let isForFor = false
             let dataSingle
-            if (dom.props['for']) { //add for direction
-                if (Util.isForOrForFor(dom.props['for'])) {
-                    if (dom.forData) {
-                        if (Util.isForIn(dom.props['for'])) {
-                            throw new Error("plase use _in direction")
-                        }
-                        dataArray = dom.forData
-                        dataSingle = dom.props['for'].split(" _in")[0]
-                    } else {
-                        if (Util.isForForIn(dom.props['for'])) {
-                            throw new Error("plase use _in_ direction")
-                        }
-                        dataArray = this.data[dom.props['for'].split(" _in_ ")[1]]
-                        dataSingle = dom.props['for'].split(" _in_ ")[0]
-                       
+
+            if (Util.isForIn) {
+                if("childDomDatakey" in dom){
+                    dataArray=dom.data
+                    dataSingle=dom.childDomDatakey
+                }else if("domDataKey" in dom){
+                    if(dom.props['for'].split(" _in_ ")[1]===dom.domDataKey){
+                        dataArray=dom.data
                     }
+                    dataSingle = dom.props['for'].split(" _in_ ")[0]
+
                 }
-            } else if (dom.props['for_for']) { //add for_for direction
-                if (Util.isForOrForFor(dom.props['for_for'])) {
-                    if (Util.isForForIn(dom.props['for_for'])) {
-                        throw new Error("plase use _in_ direction")
-                    }
-                    isForFor = true
-                    dataArray = this.data[dom.props['for_for'].split(" _in_ ")[1]]
-                    dataSingle = dom.props['for_for'].split(" _in_ ")[0]
-                   
-                } else { }
-            } else {
-                throw new Error("the for direction use error")
+                else{
+                    dataArray = this.data[dom.props['for'].split(" _in_ ")[1]]
+                    dataSingle = dom.props['for'].split(" _in_ ")[0]
+                }
+               
+            }else{
+                throw new Error("the for directive use error")
             }
             let objs = []
             dataArray.forEach(data => {
@@ -642,19 +631,18 @@ class RV {
 
                             obj.props[value] = this.handleSingleStyle(data, style, dataSingle)
                         }
-                    } 
+                    }
 
                     else {
                         if (RV.isPlaceHolder(dom.props[value])) {
-                            if (RV.getPlaceHolderValue(dom.props[value]).indexOf(dataSingle) == -1) {
+                            if (!RV.isDotOperatorExpression(RV.getPlaceHolderValue(dom.props[value]))) {
                                 obj.props[value] = this.data[RV.getPlaceHolderValue(dom.props[value])]
                             } else {
                                 obj.props[value] = data[RV.getPlaceHolderValue(dom.props[value]).split(".")[1]]
-
                             }
                         } else if (RV.isOperatorExpression(dom.props[value])) {
-                          
-                            obj.props[value] = RV.getOperatorExpression(dom.props[value],data)
+
+                            obj.props[value] = RV.getOperatorExpression(dom.props[value], data, dataSingle)
                         }
                         else {
                             obj.props[value] = dom.props[value]
@@ -662,38 +650,36 @@ class RV {
                     }
 
                 }
-                
+
 
                 for (let child in dom.children) {
                     if (Util.isString(dom.children[child])) {
-                        console.log("childString,child:"+dom.children[child])
-                        
                         if (RV.isPlaceHolder(dom.children[child])) {
                             if (RV.getPlaceHolderValue(dom.children[child]).indexOf(dataSingle) == -1) {
                                 obj.children[child] = this.data[RV.getPlaceHolderValue(dom.children[child])]
-                                 
+
                             } else {
                                 obj.children[child] = data[RV.getPlaceHolderValue(dom.children[child]).split(".")[1]]
                             }
 
                         }
-
                         else {
-                           
                             obj.children[child] = dom.children[child]
                         }
 
 
                     } else {
-                        if (isForFor) {
-                            dom.children[child].forData = data
-                        }
+                        if (dom.children[child] instanceof Object) {
+                            if ("childDomData" in dom.props) {
+                                dom.children[child].childDomDatakey = dom.props.childDomData
 
-
-                        else {
-                            if (dom.children[child] instanceof Object) {
                                 dom.children[child].data = data
-                            }
+                            }else if("domData" in dom.props){
+                                dom.children[child].domDataKey = dom.props.domData
+                                dom.children[child].data = data[child]
+                            } 
+                           
+                            dom.children[child].data = data
 
                         }
                         obj.children[child] = this.applyTruthfulData(dom.children[child])
@@ -707,12 +693,14 @@ class RV {
             )
             return objs
         } else {
-          
+
             let data
-            if("data" in dom){
-                data=dom.data
-            }else{
-                data=this.data
+            let childDomDatakey
+            if ("data" in dom) {
+                data = dom.data
+                childDomDatakey = dom.childDomDatakey
+            } else {
+                data = this.data
             }
             let obj = {}
             obj.tag = dom.tag
@@ -730,15 +718,15 @@ class RV {
 
                         obj.props[value] = this.handleSingleStyle(data, style, undefined)
                     }
-                } 
+                }
                 else {
 
                     if (RV.isPlaceHolder(dom.props[value])) {
                         obj.props[value] = this.data[RV.getPlaceHolderValue(dom.props[value])]
                     }
                     else if (RV.isOperatorExpression(dom.props[value])) {
-                       
-                        obj.props[value] = RV.getOperatorExpression(dom.props[value],data)
+
+                        obj.props[value] = RV.getOperatorExpression(dom.props[value], data, childDomDatakey)
                     }
                     else {
                         obj.props[value] = dom.props[value]
@@ -751,26 +739,26 @@ class RV {
             for (let child in dom.children) {
                 if (Util.isString(dom.children[child])) {
                     if (RV.isPlaceHolder(dom.children[child])) {
-                        let value=RV.getPlaceHolderValue(dom.children[child])
-                        
-                        if(value.indexOf(".")>0){
+                        let value = RV.getPlaceHolderValue(dom.children[child])
+
+                        if (value.indexOf(".") > 0) {
                             obj.children[child] = data[value.split('.')[1]]
-                           
-                        }else{
+
+                        } else {
                             obj.children[child] = data[value]
                         }
-                       
-                    }else{
-                        obj.children[child]=dom.children[child]
+
+                    } else {
+                        obj.children[child] = dom.children[child]
                     }
-                 
+
                 } else {
 
                     obj.children[child] = this.applyTruthfulData(dom.children[child])
 
                 }
             }
-           
+
             return obj
         }
     }
@@ -818,7 +806,7 @@ class RV {
     }
     static isPlaceHolder(content) {
         if (content) {
-            if (content.startsWith("%#") && content.endsWith("#%")) {
+            if (/^%#\w*.\w*#%$/.test(content)) {
                 return true
             } else {
                 return false
@@ -827,7 +815,9 @@ class RV {
             return false
         }
     }
-
+    static isDotOperatorExpression(content){
+        return /^\w*.\w*$/.test(content)
+    }
     static getPlaceHolderValue(content) {
         return content.slice(2, -2)
     }
@@ -836,44 +826,47 @@ class RV {
      * @param {String} content 
      */
     static isOperatorExpression(content) {
-      
+
         if (Util.isString(content)) {
-            if (content.indexOf("{") != -1 && content.indexOf("}") != -1) {
-               
+            if (/^{\w*}$/.test(content)) {
+
                 return true
             } else {
-               
+
                 return false
             }
         }
         return false
     }
-    static getOperatorExpression(content, data) {
+    static getOperatorExpression(content, data, dataKey) {
         if (Util.isString(content)) {
-           
+
             var expression = content.slice(content.indexOf("{") + 1, content.indexOf("}"))
             let startIndex = expression.indexOf("%#")
-            let endIndex = expression.indexOf("#%")+2
-            console.log("getOperatorExpression,startIndex:"+(startIndex)+",endIndex:"+(endIndex)+",express:"+expression)
+            let endIndex = expression.indexOf("#%") + 2
+            console.log("getOperatorExpression,startIndex:" + (startIndex) + ",endIndex:" + (endIndex) + ",express:" + expression)
             if (startIndex != -1 && endIndex != -1 && startIndex < endIndex) {
                 let placeHolder = expression.slice(startIndex, endIndex)
-                console.log("getOperatorExpression,placeHolder:"+placeHolder+",express:"+expression)
+                console.log("getOperatorExpression,placeHolder:" + placeHolder + ",express:" + expression)
                 let realValue
-                if(placeHolder.indexOf(".")>0){
-                    let placeHolderValue=data[RV.getPlaceHolderValue(placeHolder).split(".")[1]]
-                    realValue=Util.isNumber(placeHolderValue)?placeHolderValue:`"${placeHolderValue}"`//通过placeHolder取真实的值
+                if (placeHolder.indexOf(".") > 0) {
+                    if (RV.getPlaceHolderValue(placeHolder).split(".")[0] === dataKey) {
+                        let placeHolderValue = data[RV.getPlaceHolderValue(placeHolder).split(".")[1]]
+                        realValue = Util.isNumber(placeHolderValue) ? placeHolderValue : `"${placeHolderValue}"`//通过placeHolder取真实的值
 
-                    
-                    console.log("realValue ,1,:"+realValue)
-                }else{
-                     realValue = data[RV.getPlaceHolderValue(placeHolder)]//通过placeHolder取真实的值
-                     console.log("realValue ,2,:"+realValue)
+                    }
+
+
+                    console.log("realValue ,1,:" + realValue)
+                } else {
+                    realValue = data[RV.getPlaceHolderValue(placeHolder)]//通过placeHolder取真实的值
+                    console.log("realValue ,2,:" + realValue)
                 }
-               
-                expression=expression.replace(placeHolder, realValue)
-               
+
+                expression = expression.replace(placeHolder, realValue)
+
             }
-            console.log("expression,realValue:"+expression)
+            console.log("expression,realValue:" + expression)
             return eval(expression)
         }
 

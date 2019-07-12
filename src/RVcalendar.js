@@ -337,7 +337,8 @@ export default function generateView(el, callback) {
                     props: {
                         style: 'cursor:hand',
                         key: "%#week.id#%",
-                        for_for: 'week _in_ weeks'
+                        for: 'week _in_ weeks',
+                        domData:"week"
                     },
 
                     children: [{
@@ -350,8 +351,7 @@ export default function generateView(el, callback) {
                             onMouseover: 'mouseOver(this);',
                             onMouseOut: 'mouseOut(this);',
                             childDomData:"v",
-                            
-                            for: 'v _in'
+                            for: 'v _in_ week'
                         },
                         
                         children: [
@@ -370,6 +370,7 @@ export default function generateView(el, callback) {
                                 props:
                                 {
                                    key: "{%#v.id#%+'_lunarInfo'}",
+                                   time:"{new Date()}",
                                    style:"margin-block-start: 0em;margin-block-end: 0em"
                                 },
                                 children: ["%#v.lunarInfo#%"]
