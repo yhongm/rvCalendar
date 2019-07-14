@@ -615,77 +615,8 @@ class RV {
             }
             let objs = []
             dataArray.forEach(data => {
-                let obj = {}
-                obj.tag = dom.tag
-                obj.children = []
-                obj.props = {}
-                let props = Object.keys(dom.props)
-                for (let prop in props) {
-                    let value = props[prop]
-                    if (value === "style") {
-                        let style = dom.props[value]
-                        if (style.indexOf(",") > -1) {
-                            let styles = style.split(",")
-                            obj.props[value] = this.handleArrayStyle(data, styles, dataSingle)
-                        } else {
-
-                            obj.props[value] = this.handleSingleStyle(data, style, dataSingle)
-                        }
-                    }
-
-                    else {
-                        if (RV.isPlaceHolder(dom.props[value])) {
-                            if (!RV.isDotOperatorExpression(RV.getPlaceHolderValue(dom.props[value]))) {
-                                obj.props[value] = this.data[RV.getPlaceHolderValue(dom.props[value])]
-                            } else {
-                                obj.props[value] = data[RV.getPlaceHolderValue(dom.props[value]).split(".")[1]]
-                            }
-                        } else if (RV.isOperatorExpression(dom.props[value])) {
-
-                            obj.props[value] = RV.getOperatorExpression(dom.props[value], data, dataSingle)
-                        }
-                        else {
-                            obj.props[value] = dom.props[value]
-                        }
-                    }
-
-                }
-
-
-                for (let child in dom.children) {
-                    if (Util.isString(dom.children[child])) {
-                        if (RV.isPlaceHolder(dom.children[child])) {
-                            if (RV.getPlaceHolderValue(dom.children[child]).indexOf(dataSingle) == -1) {
-                                obj.children[child] = this.data[RV.getPlaceHolderValue(dom.children[child])]
-
-                            } else {
-                                obj.children[child] = data[RV.getPlaceHolderValue(dom.children[child]).split(".")[1]]
-                            }
-
-                        }
-                        else {
-                            obj.children[child] = dom.children[child]
-                        }
-
-
-                    } else {
-                        if (dom.children[child] instanceof Object) {
-                            if ("childDomData" in dom.props) {
-                                dom.children[child].childDomDatakey = dom.props.childDomData
-
-                                dom.children[child].data = data
-                            }else if("domData" in dom.props){
-                                dom.children[child].domDataKey = dom.props.domData
-                                dom.children[child].data = data[child]
-                            } 
-                           
-                            dom.children[child].data = data
-
-                        }
-                        obj.children[child] = this.applyTruthfulData(dom.children[child])
-                    }
-                }
-
+             
+                let obj=this.vdom2rdom(dom,data,dataSingle,data)
 
                 objs.push(obj)
             }
@@ -701,66 +632,91 @@ class RV {
                 childDomDatakey = dom.childDomDatakey
             } else {
                 data = this.data
+                childDomDatakey=undefined
             }
-            let obj = {}
-            obj.tag = dom.tag
-            obj.children = []
-            obj.props = {}
-            let props = Object.keys(dom.props)
-            for (let prop in props) {
-                let value = props[prop]
-                if (value === "style") {
-                    let style = dom.props[value]
-                    if (style.indexOf(",") > -1) {
-                        let styles = style.split(",")
-                        obj.props[value] = this.handleArrayStyle(data, styles, undefined)
-                    } else {
-
-                        obj.props[value] = this.handleSingleStyle(data, style, undefined)
-                    }
-                }
-                else {
-
-                    if (RV.isPlaceHolder(dom.props[value])) {
-                        obj.props[value] = this.data[RV.getPlaceHolderValue(dom.props[value])]
-                    }
-                    else if (RV.isOperatorExpression(dom.props[value])) {
-
-                        obj.props[value] = RV.getOperatorExpression(dom.props[value], data, childDomDatakey)
-                    }
-                    else {
-                        obj.props[value] = dom.props[value]
-                    }
-
-                }
-
-            }
-
-            for (let child in dom.children) {
-                if (Util.isString(dom.children[child])) {
-                    if (RV.isPlaceHolder(dom.children[child])) {
-                        let value = RV.getPlaceHolderValue(dom.children[child])
-
-                        if (value.indexOf(".") > 0) {
-                            obj.children[child] = data[value.split('.')[1]]
-
-                        } else {
-                            obj.children[child] = data[value]
-                        }
-
-                    } else {
-                        obj.children[child] = dom.children[child]
-                    }
-
-                } else {
-
-                    obj.children[child] = this.applyTruthfulData(dom.children[child])
-
-                }
-            }
+           
+            let obj=this.vdom2rdom(dom,data,childDomDatakey,this.data)
 
             return obj
         }
+    }
+    vdom2rdom(dom,data,dataSingle,tdata){
+        console.log("vdom2rdom:"+JSON.stringify(data))
+        let obj = {}
+        obj.tag = dom.tag
+        obj.children = []
+        obj.props = {}
+        let props = Object.keys(dom.props)
+        for (let prop in props) {
+            let value = props[prop]
+            if (value === "style") {
+                let style = dom.props[value]
+
+                if (style.indexOf(",") > -1) {
+                    let styles = style.split(",")
+                    obj.props[value] = this.handleArrayStyle(data, styles, dataSingle)
+                } else {
+
+                    obj.props[value] = this.handleSingleStyle(data, style, dataSingle)
+                }
+            }
+            else {
+                if (RV.isPlaceHolder(dom.props[value])) {
+                    console.log(`dom.props[value]:${dom.props[value]},RV.getPlaceHolderValue(dom.props[value])):${RV.isDotOperatorExpression(RV.getPlaceHolderValue(dom.props[value]))}`)
+                    if (!RV.isDotOperatorExpression(RV.getPlaceHolderValue(dom.props[value]))) {
+                        console.log("rdata:"+tdata[RV.getPlaceHolderValue(dom.props[value])])
+                        obj.props[value] = tdata[RV.getPlaceHolderValue(dom.props[value])]
+                    } else {
+                        obj.props[value] = data[RV.getPlaceHolderValue(dom.props[value]).split(".")[1]]
+                    }
+                } else if (RV.isOperatorExpression(dom.props[value])) {
+
+                    obj.props[value] = RV.getOperatorExpression(dom.props[value], data, dataSingle)
+                }
+                else {
+                    obj.props[value] = dom.props[value]
+                }
+
+            }
+
+        }
+
+        for (let child in dom.children) {
+            if (Util.isString(dom.children[child])) {
+                if (RV.isPlaceHolder(dom.children[child])) {
+                    if (RV.getPlaceHolderValue(dom.children[child]).indexOf(dataSingle) == -1) {
+                        obj.children[child] = tdata[RV.getPlaceHolderValue(dom.children[child])]
+
+                    } else {
+                        obj.children[child] = data[RV.getPlaceHolderValue(dom.children[child]).split(".")[1]]
+                    }
+
+                }
+                else {
+                    obj.children[child] = dom.children[child]
+                }
+
+            } else {
+                if (dom.children[child] instanceof Object) {
+                    if ("childDomData" in dom.props) {
+                        dom.children[child].childDomDatakey = dom.props.childDomData
+
+                        dom.children[child].data = data
+                    }else if("domData" in dom.props){
+                        dom.children[child].domDataKey = dom.props.domData
+                        dom.children[child].data = data[child]
+                    } 
+                   
+                    dom.children[child].data = data
+
+                }
+
+                obj.children[child] = this.applyTruthfulData(dom.children[child])
+
+            }
+        }
+        return obj
+
     }
     handleSingleStyle(data, style, dataSingle) {
         let newStyle = ''
@@ -816,7 +772,7 @@ class RV {
         }
     }
     static isDotOperatorExpression(content){
-        return /^\w*.\w*$/.test(content)
+        return /^\w*\.\w*$/.test(content)
     }
     static getPlaceHolderValue(content) {
         return content.slice(2, -2)
@@ -828,7 +784,7 @@ class RV {
     static isOperatorExpression(content) {
 
         if (Util.isString(content)) {
-            if (/^{\w*}$/.test(content)) {
+            if (/^\{\w*|\|\%+\}$/.test(content)) {
 
                 return true
             } else {
