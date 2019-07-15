@@ -1,4 +1,4 @@
-import RV from './rv'
+import RV from 'yhongm_rv.js/src/rv/main'
 import lunarCalendar from './lunar'
 
 /**
@@ -131,7 +131,6 @@ Calendar.prototype.subMonth = function () {
     } else {
         this.month = this.month - 1;
     }
-    console.log("month:" + this.month)
 }
 Calendar.prototype.addMonth = function () {
     if ((this.month + 1) > 11) {
@@ -259,6 +258,7 @@ export default function generateView(el, callback) {
                                     style: 'font-size: 9pt; text-decoration: none;background-color: #FFFFFF;height: 20px;border: 1px solid #666666; color: #000000;text-align:center;',
                                     size: "4",
                                     value: '%#year#%',
+                                    disabled:"disabled",
                                     key: "inputYear"
                                 },
                                 children: [""]
@@ -269,6 +269,7 @@ export default function generateView(el, callback) {
                                     type: "text",
                                     maxlength: "2",
                                     value: '%#month#%',
+                                    disabled:"disabled",
                                     style: 'font-size: 9pt; text-decoration: none;background-color: #FFFFFF;height: 20px;border: 1px solid #666666; color: #000000;text-align:center;',
                                     size: "2",
                                     key: "inputMonth"
@@ -390,7 +391,6 @@ export default function generateView(el, callback) {
     Object.defineProperty(mCalendar, 'month', {
 
         set(nvalue) {
-            console.log("newMonth:" + nvalue)
             if (month != nvalue) {
                 month = nvalue
                 rv.data.weeks = mCalendar.getWeeks()

@@ -218,8 +218,6 @@ class LunarCalendar {
   _monthDays(year, month) {
     if (month > 12 || month < 1) { return -1 }//月份参数从1至12，参数错误返回-1
 
-    console.log("_monthDays:" + (this._yearInfo[year - 1900] & (0x10000 >> month)))
-
     return ((this._yearInfo[year - 1900] & (0x10000 >> month)) ? 30 : 29);
   }
   /**
@@ -386,7 +384,6 @@ class LunarCalendar {
         lday_v = "0" + day;
       }
       lmd = lmonth_v + lday_v;
-      console.log("lmd:" + lmd)
       if (ld.trim() === lmd.trim()) {
         lunarHolidayStr = ldv
       }
@@ -543,7 +540,6 @@ class LunarCalendar {
     //1900年1月小寒以前为 丙子月(60进制12)
     var _firstCalendaricityDay = this._getCalendaricity(nowSelectYear, (nowSelectMonth * 2 - 1));//返回当月「节」为几日开始
     var _secondCalendaricityDay = this._getCalendaricity(nowSelectYear, (nowSelectMonth * 2));//返回当月「节」为几日开始
-    console.log("_firstCalendaricityDay:" + _firstCalendaricityDay + ",_secondCalendaricityDay:" + _secondCalendaricityDay)
     //依据12节气修正干支月
     let ganZhiMonth = this._getGanZhi((nowSelectYear - 1900) * 12 + nowSelectMonth + 11);
     if (nowSelectDay >= _firstCalendaricityDay) {
