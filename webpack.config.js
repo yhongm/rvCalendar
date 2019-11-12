@@ -5,10 +5,17 @@ const {
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
   entry: './src/RVcalendar.js',
+  // entry:'./calendarDemo.js',
   mode:'production',
+  // mode:'development',
   // devtool: 'inline-source-map',
   plugins: [
     new CleanWebpackPlugin(),
+    new HtmlWebpackPlugin({
+      title: '',
+      template:'calendarDemo.html',
+      filename:'demo.html'
+    })
   ],
   output: {
     path: path.resolve(__dirname, 'dist'),

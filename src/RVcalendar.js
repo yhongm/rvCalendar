@@ -1,4 +1,4 @@
-import RV from 'yhongm_rv.js/src/rv/main'
+import RV from 'yhongm_rv.js'
 import lunarCalendar from './lunar'
 
 /**
@@ -176,7 +176,6 @@ window.clickDay = function (element) {
 }
 
 export default function generateView(el, callback) {
-
     var weeks = mCalendar.getWeeks()
     let rv = new RV({
         el: el,
@@ -206,185 +205,37 @@ export default function generateView(el, callback) {
             ],
             weeks: weeks
         },
-        dom: {
-            tag: "table",
-            props: {
-                border: 0,
-                cellpadding: '0',
-                cellspacing: '1',
-                id: 'caltable',
-                key: 'table',
-                style: 'text-decoration:none;width:200;background-color:#D0D0EE;font-size:8pt;border:0px dotted #1C6FF5;'
-            },
-            children: [{
-                tag: "thead",
-                props: {
-                    key: "thead"
-                },
-                children: [{
-                    tag: 'tr',
-                    props: {
-                        align: "center",
-                        valign: "middle",
-                        id: "title",
-                        key: "title",
-                        style: 'font-weight:normal;height:24px;text-align:center;color:#333333;text-decoration:none;background-color:#A4B9D7;border-top-width:1px;border-right-width:1px;border-bottom-width: 1px; border-left-width: 1px;border-bottom-style: 1px;border-top-color: #999999;border-right-color: #999999;border-bottom-color:#999999;border-left-color:#999999;'
-                    },
-                    children: [{
-                        tag: 'td',
-                        props: {
-                            colspan: "7",
-                            key: 'tdTitle'
-                        },
-                        children: [{
-                            tag: 'div',
-                            props: {
-                                key: 'titleDiv'
-                            },
-                            children: [{
-                                tag: 'button',
-                                props: {
-                                    onclick: "mCalendar.subMonth()",
-                                    style: 'font-weight:bold; color:#243F65;cursor:hand;text-decoration:none;margin-right:20px',
-                                    key: "subButton"
-                                },
-                                children: ["<"]
-                            }, {
-                                tag: "input",
-                                props: {
-                                    name: "year",
-                                    type: "text",
-                                    maxlength: "4",
-                                    style: 'font-size: 9pt; text-decoration: none;background-color: #FFFFFF;height: 20px;border: 1px solid #666666; color: #000000;text-align:center;',
-                                    size: "4",
-                                    value: '%#year#%',
-                                    disabled:"disabled",
-                                    key: "inputYear"
-                                },
-                                children: [""]
-                            }, {
-                                tag: "input",
-                                props: {
-                                    name: "month",
-                                    type: "text",
-                                    maxlength: "2",
-                                    value: '%#month#%',
-                                    disabled:"disabled",
-                                    style: 'font-size: 9pt; text-decoration: none;background-color: #FFFFFF;height: 20px;border: 1px solid #666666; color: #000000;text-align:center;',
-                                    size: "2",
-                                    key: "inputMonth"
-                                },
-                                children: [""]
-                            }, {
-                                tag: 'button',
-                                props: {
-                                    onclick: "mCalendar.addMonth()",
-                                    style: 'font-weight: bold;color: #243F65;cursor: hand;text-decoration: none;margin-left:20px',
-                                    key: "addButton"
-                                },
-                                children: [">"]
-                            }
-
-                            ]
-
-                        }]
-                    }]
-                }, {
-                    tag: 'tr',
-                    props: {
-                        key: 'daytr'
-                    },
-                    children: [{
-                        tag: 'td',
-                        props: {
-                            style: 'color: #FF0000;text-decoration: none;background-color: #C0D0E8;text-align: center;height: 20px;width: 12%;',
-                            key: 'daySunTitle'
-                        },
-                        children: ["日"],
-                    }, {
-                        tag: 'td',
-                        props: {
-                            style: 'color:#000000;background-color:#C0D0E8;height:20px;width:11%;text-align:center;',
-                            key: "%#v.id#%",
-                            for: "v _in_ weekTitles"
-                        },
-                        children: ["%#v.value#%"]
-                    },
-                    {
-                        tag: 'td',
-                        props: {
-                            style: ' color:#FF0000;text-decoration:none;background-color:#C0D0E8;text-align:center;height: 20px;width: 12%;',
-                            key: 'daySatTitle'
-                        },
-                        children: ["六"]
-                    }
-                    ]
-
-                }]
-            },
-            {
-                tag: "tbody",
-                props: {
-                    cellspacing: "0",
-                    cellpadding: "0",
-                    id: "calendar",
-                    style: ' text-decoration: none;width: 170;background-color: #C0D0E8;font-size: 9pt;border: 0px dotted #1C6FA5;',
-                    align: "center",
-                    border: "1",
-                    key: "tbody"
-                },
-                children: [{
-                    tag: 'tr',
-                    props: {
-                        style: 'cursor:hand',
-                        key: "%#week.id#%",
-                        for: 'week _in_ weeks',
-                        domData:"week"
-                    },
-
-                    children: [{
-                        tag: 'td',
-                        props: {
-                            key: "%#v.id#%",
-                            onclick: 'clickDay(this)',
-                            style: '%#v.style#%',
-                            lable: '%#v.lable#%',
-                            onMouseover: 'mouseOver(this);',
-                            onMouseOut: 'mouseOut(this);',
-                            childDomData:"v",
-                            for: 'v _in_ week'
-                        },
-                        
-                        children: [
-                            {
-                                tag: "p",
-                                props:
-                                {
-                                   key: "{%#v.id#%+'_content'}",
-                                   style:"margin-block-start: 0em;margin-block-end: 0em"
-                                },
-                                children: ["%#v.content#%"]
-
-                            },
-                            {
-                                tag: "p",
-                                props:
-                                {
-                                   key: "{%#v.id#%+'_lunarInfo'}",
-                                   time:"{new Date()}",
-                                   style:"margin-block-start: 0em;margin-block-end: 0em"
-                                },
-                                children: ["%#v.lunarInfo#%"]
-
-                            }
-                        ]
-                    },]
-                },]
-            }
-            ]
-        }
+        template:`
+              <table border="0" cellpadding="0" cellspacing="1" id="caltable" key="table" style="text-decoration:none;width:200;background-color:#D0D0EE;font-size:8pt;border:0px dotted #1C6FF5;">
+                <thead key="thead">
+                <tr align="center" valign="middle" id="title" key="title" style="font-weight:normal;height:24px;text-align:center;color:#333333;text-decoration:none;background-color:#A4B9D7;border-top-width:1px;border-right-width:1px;border-bottom-width: 1px; border-left-width: 1px;border-bottom-style: 1px;border-top-color: #999999;border-right-color: #999999;border-bottom-color:#999999;border-left-color:#999999;">
+                   <td colspan="7" key="tdTitle">
+                      <div key="titleDiv">
+                          <button key="subButton"  style="font-size:1px; color:#243F65;cursor:hand;text-decoration:none;margin-right:2px" onclick="mCalendar.subMonth()">"上月"</button>
+                          <input name="year" type="text"  maxlength="4" size="4"  value="%#year#%" disabled="disabled" key="inputYear"></input>
+                          <input name="month" type="text"  maxlength="2" size="2"  value="%#month#%" disabled="disabled" key="inputMonth"></input>
+                          <button key="addButton"  style="font-size:1px; color:#243F65;cursor:hand;text-decoration:none;margin-left:2px" onclick="mCalendar.addMonth()">"下月"</button>
+                      </div>
+                   </td>
+                </tr>
+                <tr key="daytr">
+                  <td style="color: #FF0000;text-decoration: none;background-color: #C0D0E8;text-align: center;height: 20px;width: 12%;" key="daySunTitle">"日"</td>
+                  <td style="color:#000000;background-color:#C0D0E8;height:20px;width:11%;text-align:center;"  key="%#v.id#%" for="v _in_ weekTitles">"%#v.value#%"</td>
+                  <td style="color: #FF0000;text-decoration: none;background-color: #C0D0E8;text-align: center;height: 20px;width: 12%;" key="daySatTitle">"六"</td>
+                </tr>
+              </thead>
+                <tbody cellspacing="0" cellpadding="0" id="calendar" style="text-decoration: none;width: 170;background-color: #C0D0E8;font-size: 9pt;border: 0px dotted #1C6FA5;"  align="center" border="1" key="tbody">
+                  <tr style="cursor:hand" key="%#week.id#%" for="week _in_ weeks" domData="week">
+                      <td  key="%#v.id#%" onclick="clickDay(this)" style="%#v.style#%" lable="%#v.lable#%" onMouseover="mouseOver(this)" onMouseOut="mouseOut(this)" childDomData="v" for="v _in_ week">
+                          <p key="{%#v.id#%+'_content'}" style="margin-block-start: 0em;margin-block-end: 0em">"%#v.content#%"</p>
+                          <p key="{%#v.id#%+'_lunarInfo'}" style="margin-block-start: 0em;margin-block-end: 0em" time="{new Date()}">"%#v.lunarInfo#%"</p>
+                      </td>
+                  </tr>
+                </tbody>      
+              </table>
+              `
     })
-
+    
     let month = mCalendar['month']
     let year = mCalendar['year']
     let selectDay = mCalendar['selectDay']
