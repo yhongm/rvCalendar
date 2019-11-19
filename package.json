@@ -1,12 +1,12 @@
 {
   "name": "rvcalendar",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "a calendar",
   "main": "src/RVcalendar.js",
   "dependencies": {
     "@babel/core": "^7.4.5",
     "@babel/preset-env": "^7.4.5",
-    "yhongm_rv.js": "^1.2.2"
+    "yhongm_rv.js": "^1.3.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",

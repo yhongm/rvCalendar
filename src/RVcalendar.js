@@ -235,6 +235,7 @@ export default function generateView(el, callback) {
               </table>
               `
     })
+    rv.run()
     
     let month = mCalendar['month']
     let year = mCalendar['year']
